@@ -4,9 +4,10 @@
     <item android:drawable="@android:color/white" />
 
     <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <!-- TODO fix new image. Also, add more dimensions as discussed here https://stackoverflow.com/questions/43879103/adding-a-splash-screen-to-flutter-apps -->
+    <item>
         <bitmap
             android:gravity="center"
             android:src="@mipmap/launch_image" />
-    </item> -->
+    </item>
 </layer-list>
