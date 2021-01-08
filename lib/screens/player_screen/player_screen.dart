@@ -33,7 +33,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
   Widget _listBody() {
     List<Widget> elements = [];
     for (String player in _players) {
-      elements.add(PlayerField(playerName: player));
+      elements.add(PlayerField(
+          playerName: player,
+          delete: () {
+            setState(() {
+              _players.remove(player);
+            });
+          }));
     }
     elements.add(
       Padding(
