@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class NewPlayerDialog extends StatefulWidget {
   const NewPlayerDialog({
     Key key,
-    this.submit,
-    this.cancel,
+    @required this.firstTime,
+    @required this.submit,
+    @required this.cancel,
   }) : super(key: key);
 
+  final bool firstTime;
   final Function(String) submit;
   final VoidCallback cancel;
 
@@ -48,10 +50,12 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
         ),
       ),
       actions: [
-        FlatButton(
-          child: const Text('Avbryt'),
-          onPressed: () => widget.cancel(),
-        ),
+        widget.firstTime
+            ? Container()
+            : FlatButton(
+                child: const Text('Avbryt'),
+                onPressed: () => widget.cancel(),
+              ),
         FlatButton(
           child: const Text('OK'),
           onPressed: () {

@@ -31,6 +31,11 @@ class PlayerField extends StatelessWidget {
             });
       },
       child: Card(
+        margin: EdgeInsets.only(
+          top: 12.0,
+          left: 8.0,
+          right: 8.0,
+        ),
         child: Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(

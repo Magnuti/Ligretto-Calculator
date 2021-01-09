@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ligretto_calculator/screens/game_screen/game_screen.dart';
 import 'package:ligretto_calculator/screens/player_screen/new_player_dialog.dart';
 import 'package:ligretto_calculator/screens/player_screen/player_field.dart';
+import 'package:ligretto_calculator/res/colors.dart';
 
 class PlayerScreen extends StatefulWidget {
   @override
@@ -9,6 +11,16 @@ class PlayerScreen extends StatefulWidget {
 
 class _PlayerScreenState extends State<PlayerScreen> {
   List<String> _players = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // _showNew..() must be called inside WidgetBi..() funtion as it must finish building.
+      // Maybe because Scaffold is not build yet?
+      _showNewNameDialog(true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +32,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
             children: <Widget>[
               Expanded(child: _listBody()),
               RaisedButton(
-                onPressed: () => null,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => GameScreen(
+                        players: _players,
+                      ),
+                    ),
+                  );
+                },
                 child: Text("Start"),
               ),
             ],
@@ -45,23 +66,30 @@ class _PlayerScreenState extends State<PlayerScreen> {
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
         child: RaisedButton.icon(
-          onPressed: () => showDialog(
-            context: context,
-            child: NewPlayerDialog(
-              submit: (String value) {
-                setState(() {
-                  _players.add(value);
-                });
-                Navigator.of(context).pop();
-              },
-              cancel: () => Navigator.of(context).pop(),
-            ),
-          ),
+          onPressed: () => _showNewNameDialog(false),
           icon: Icon(Icons.add),
           label: Text('Legg til spiller'),
+          color: darkBlue,
         ),
       ),
     );
     return ListView(children: elements);
+  }
+
+  Future<void> _showNewNameDialog(bool firstTime) async {
+    showDialog(
+      context: context,
+      barrierDismissible: !firstTime,
+      child: NewPlayerDialog(
+        firstTime: firstTime,
+        submit: (String value) {
+          setState(() {
+            _players.add(value);
+          });
+          Navigator.of(context).pop();
+        },
+        cancel: () => Navigator.of(context).pop(),
+      ),
+    );
   }
 }
