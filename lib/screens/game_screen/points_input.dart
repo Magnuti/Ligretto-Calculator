@@ -22,6 +22,7 @@ class PointsInput extends StatefulWidget {
 
 class _PointsInputState extends State<PointsInput> {
   TextEditingController _controller;
+  double _iconSize = 26.0;
 
   void initState() {
     super.initState();
@@ -43,11 +44,15 @@ class _PointsInputState extends State<PointsInput> {
               ? () => widget.decrement()
               : null,
           icon: Icon(Icons.remove_circle),
+          iconSize: _iconSize,
         ),
         Container(
           width: 20.0, // Works for 3 digits (e.g. -12)
           child: Center(
-            child: Text(widget.points.toString()),
+            child: Text(
+              widget.points.toString(),
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ),
         IconButton(
@@ -55,6 +60,7 @@ class _PointsInputState extends State<PointsInput> {
               ? () => widget.increment()
               : null,
           icon: Icon(Icons.add_circle),
+          iconSize: _iconSize,
         ),
       ],
     );

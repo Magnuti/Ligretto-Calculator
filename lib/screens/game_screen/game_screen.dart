@@ -43,7 +43,7 @@ class _GameScreenState extends State<GameScreen> {
             // TODO add confirmation
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.close),
         ),
         actions: [
           IconButton(
@@ -145,8 +145,9 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(4.0),
+            padding: EdgeInsets.symmetric(vertical: 8.0),
             child: RaisedButton(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
               onPressed: () {
                 setState(() {
                   for (String player in widget.players) {
@@ -157,7 +158,10 @@ class _GameScreenState extends State<GameScreen> {
                   _round++;
                 });
               },
-              child: Text('Neste runde'),
+              child: Text(
+                'Neste runde',
+                style: TextStyle(fontSize: 16.0),
+              ),
             ),
           ),
         ],

@@ -31,18 +31,26 @@ class _PlayerScreenState extends State<PlayerScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(child: _listBody()),
-              RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GameScreen(
-                        players: _players,
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: RaisedButton(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GameScreen(
+                          players: _players,
+                        ),
                       ),
-                    ),
-                  );
-                },
-                child: Text("Start"),
+                    );
+                  },
+                  child: Text(
+                    "Start",
+                    style: TextStyle(fontSize: 20.0),
+                  ),
+                ),
               ),
             ],
           ),

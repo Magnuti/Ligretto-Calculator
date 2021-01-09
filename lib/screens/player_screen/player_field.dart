@@ -37,10 +37,11 @@ class PlayerField extends StatelessWidget {
           right: 8.0,
         ),
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding:
+              EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0, left: 12.0),
           child: Text(
             playerName,
-            style: TextStyle(fontSize: 24.0),
+            style: TextStyle(fontSize: 22.0),
           ),
         ),
       ),
