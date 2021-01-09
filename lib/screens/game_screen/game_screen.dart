@@ -34,139 +34,163 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Runde $_round'),
-        centerTitle: true,
-        leading: IconButton(
-          onPressed: () {
-            // TODO add confirmation
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.close),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => null,
-            icon: Icon(Icons.help_outline),
+    return WillPopScope(
+      onWillPop: () => _confirmQuit(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Runde $_round'),
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: _confirmQuit,
+            icon: Icon(Icons.close),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 6.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _topText('Spiller'),
-                _topText('Minuspoeng'),
-                _topText('Plusspoeng'),
-                _topText('Sum'),
-              ],
+          actions: [
+            IconButton(
+              onPressed: () => null,
+              icon: Icon(Icons.help_outline),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _sortedNames.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(4.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        // TODO maybe rewrite the children. Only two children (expanded(name text field) and a row with the rest)
-                        // TODO this way, the name text field will always be max size.
-                        Flexible(
-                          flex: 4,
-                          fit:
-                              FlexFit.tight, // So the TextFields don't collapse
-                          child: Text(
-                            _sortedNames[index],
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ),
-                        Flexible(
-                          flex: 8,
-                          child: PointsInput(
-                            points: _decrementPoints[_sortedNames[index]],
-                            decrement: () {
-                              setState(() {
-                                _decrementPoints[_sortedNames[index]] -= 2;
-                                _scores[_sortedNames[index]] -= 2;
-                              });
-                            },
-                            increment: () {
-                              setState(() {
-                                _decrementPoints[_sortedNames[index]] += 2;
-                                _scores[_sortedNames[index]] += 2;
-                              });
-                            },
-                            canBePositive: false,
-                          ),
-                        ),
-                        Flexible(
-                          flex: 8,
-                          child: PointsInput(
-                            points: _incrementPoints[_sortedNames[index]],
-                            decrement: () {
-                              setState(() {
-                                _incrementPoints[_sortedNames[index]] -= 1;
-                                _scores[_sortedNames[index]] -= 1;
-                              });
-                            },
-                            increment: () {
-                              setState(() {
-                                _incrementPoints[_sortedNames[index]] += 1;
-                                _scores[_sortedNames[index]] += 1;
-                              });
-                            },
-                            canBeNegative: false,
-                          ),
-                        ),
-                        Flexible(
-                          flex: 2,
-                          child: Center(
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 6.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _topText('Spiller'),
+                  _topText('Minuspoeng'),
+                  _topText('Plusspoeng'),
+                  _topText('Sum'),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _sortedNames.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // TODO maybe rewrite the children. Only two children (expanded(name text field) and a row with the rest)
+                          // TODO this way, the name text field will always be max size.
+                          Flexible(
+                            flex: 4,
+                            fit: FlexFit
+                                .tight, // So the TextFields don't collapse
                             child: Text(
-                              '${_scores[_sortedNames[index]]}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                              _sortedNames[index],
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 8,
+                            child: PointsInput(
+                              points: _decrementPoints[_sortedNames[index]],
+                              decrement: () {
+                                setState(() {
+                                  _decrementPoints[_sortedNames[index]] -= 2;
+                                  _scores[_sortedNames[index]] -= 2;
+                                });
+                              },
+                              increment: () {
+                                setState(() {
+                                  _decrementPoints[_sortedNames[index]] += 2;
+                                  _scores[_sortedNames[index]] += 2;
+                                });
+                              },
+                              canBePositive: false,
+                            ),
+                          ),
+                          Flexible(
+                            flex: 8,
+                            child: PointsInput(
+                              points: _incrementPoints[_sortedNames[index]],
+                              decrement: () {
+                                setState(() {
+                                  _incrementPoints[_sortedNames[index]] -= 1;
+                                  _scores[_sortedNames[index]] -= 1;
+                                });
+                              },
+                              increment: () {
+                                setState(() {
+                                  _incrementPoints[_sortedNames[index]] += 1;
+                                  _scores[_sortedNames[index]] += 1;
+                                });
+                              },
+                              canBeNegative: false,
+                            ),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            child: Center(
+                              child: Text(
+                                '${_scores[_sortedNames[index]]}',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: RaisedButton(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
-              onPressed: () {
-                setState(() {
-                  for (String player in widget.players) {
-                    _decrementPoints[player] = 0;
-                    _incrementPoints[player] = 0;
-                  }
-                  _sortedNames = _calculateSortedPlayers();
-                  _round++;
-                });
-              },
-              child: Text(
-                'Neste runde',
-                style: TextStyle(fontSize: 16.0),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: RaisedButton(
+                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
+                onPressed: () {
+                  setState(() {
+                    for (String player in widget.players) {
+                      _decrementPoints[player] = 0;
+                      _incrementPoints[player] = 0;
+                    }
+                    _sortedNames = _calculateSortedPlayers();
+                    _round++;
+                  });
+                },
+                child: Text(
+                  'Neste runde',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<void> _confirmQuit() async {
+    bool exit = await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Advarsel'),
+            content: Text('Er du sikker på at du vil avslutte spillet?'),
+            actions: [
+              TextButton(
+                child: Text('Nei'),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+              TextButton(
+                child: Text('Ja'),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+    if (exit) {
+      Navigator.pop(context);
+    }
   }
 
   List<String> _calculateSortedPlayers() {
