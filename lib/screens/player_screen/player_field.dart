@@ -13,23 +13,8 @@ class PlayerField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onLongPress: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return SimpleDialog(
-                children: [
-                  SimpleDialogOption(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      this.delete();
-                    },
-                    child: const Text('Fjern spiller'),
-                  ),
-                ],
-              );
-            });
-      },
+      onLongPress: () => _showRemovePlayerDialog(context),
+      onTap: () => _showRemovePlayerDialog(context),
       child: Card(
         margin: EdgeInsets.only(
           top: 12.0,
@@ -46,5 +31,23 @@ class PlayerField extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showRemovePlayerDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            children: [
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  this.delete();
+                },
+                child: const Text('Fjern spiller'),
+              ),
+            ],
+          );
+        });
   }
 }

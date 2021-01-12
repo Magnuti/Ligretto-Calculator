@@ -45,12 +45,12 @@ class _GameScreenState extends State<GameScreen> {
             onPressed: _confirmQuit,
             icon: Icon(Icons.close),
           ),
-          actions: [
-            IconButton(
-              onPressed: () => null,
-              icon: Icon(Icons.help_outline),
-            ),
-          ],
+          // actions: [
+          //   IconButton(
+          //     onPressed: () => null,
+          //     icon: Icon(Icons.help_outline),
+          //   ),
+          // ],
         ),
         body: Column(
           children: [
@@ -121,7 +121,7 @@ class _GameScreenState extends State<GameScreen> {
                               Center(
                                 child: Container(
                                   // So that the points row elements stay still when the size changes
-                                  width: 44,
+                                  width: 48,
                                   child: Text(
                                     '${_scores[_sortedNames[index]]}',
                                     textAlign: TextAlign.center,
