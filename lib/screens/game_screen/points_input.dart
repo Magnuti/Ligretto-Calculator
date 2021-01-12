@@ -47,7 +47,7 @@ class _PointsInputState extends State<PointsInput> {
           iconSize: _iconSize,
         ),
         Container(
-          width: 20.0, // Works for 3 digits (e.g. -12)
+          width: 24.0, // Works for 3 digits (e.g. -12)
           child: Center(
             child: Text(
               widget.points.toString(),

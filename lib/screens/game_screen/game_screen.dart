@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ligretto_calculator/screens/game_screen/next_round_overlay.dart';
 import 'package:ligretto_calculator/screens/game_screen/points_input.dart';
 
 class GameScreen extends StatefulWidget {
@@ -156,6 +157,7 @@ class _GameScreenState extends State<GameScreen> {
                     _sortedNames = _calculateSortedPlayers();
                     _round++;
                   });
+                  Navigator.of(context).push(NextRoundOverlay());
                 },
                 child: Text(
                   'Neste runde',
