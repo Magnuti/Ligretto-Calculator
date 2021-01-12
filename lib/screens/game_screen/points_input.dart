@@ -21,18 +21,7 @@ class PointsInput extends StatefulWidget {
 }
 
 class _PointsInputState extends State<PointsInput> {
-  TextEditingController _controller;
-  double _iconSize = 26.0;
-
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.points.toString());
-  }
-
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  double _iconSize = 28.0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +36,11 @@ class _PointsInputState extends State<PointsInput> {
           iconSize: _iconSize,
         ),
         Container(
-          width: 24.0, // Works for 3 digits (e.g. -12)
+          width: 36.0, // Works for 3 digits (e.g. -12)
           child: Center(
             child: Text(
               widget.points.toString(),
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 18),
             ),
           ),
         ),

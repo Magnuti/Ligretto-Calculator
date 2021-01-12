@@ -59,10 +59,9 @@ class _GameScreenState extends State<GameScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _topText('Spiller'),
                   _topText('Minuspoeng'),
                   _topText('Plusspoeng'),
-                  _topText('Sum'),
+                  _topText('Totalt'),
                 ],
               ),
             ),
@@ -71,71 +70,69 @@ class _GameScreenState extends State<GameScreen> {
                 itemCount: _sortedNames.length,
                 itemBuilder: (context, index) {
                   return Card(
+                    margin:
+                        EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
                     child: Padding(
                       padding: EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: Column(
                         children: [
-                          // TODO maybe rewrite the children. Only two children (expanded(name text field) and a row with the rest)
-                          // TODO this way, the name text field will always be max size.
-                          Flexible(
-                            flex: 4,
-                            fit: FlexFit
-                                .tight, // So the TextFields don't collapse
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 2.0),
                             child: Text(
                               _sortedNames[index],
-                              style: TextStyle(fontSize: 16.0),
+                              style: TextStyle(fontSize: 20.0),
                             ),
                           ),
-                          Flexible(
-                            flex: 8,
-                            child: PointsInput(
-                              points: _decrementPoints[_sortedNames[index]],
-                              decrement: () {
-                                setState(() {
-                                  _decrementPoints[_sortedNames[index]] -= 2;
-                                  _scores[_sortedNames[index]] -= 2;
-                                });
-                              },
-                              increment: () {
-                                setState(() {
-                                  _decrementPoints[_sortedNames[index]] += 2;
-                                  _scores[_sortedNames[index]] += 2;
-                                });
-                              },
-                              canBePositive: false,
-                            ),
-                          ),
-                          Flexible(
-                            flex: 8,
-                            child: PointsInput(
-                              points: _incrementPoints[_sortedNames[index]],
-                              decrement: () {
-                                setState(() {
-                                  _incrementPoints[_sortedNames[index]] -= 1;
-                                  _scores[_sortedNames[index]] -= 1;
-                                });
-                              },
-                              increment: () {
-                                setState(() {
-                                  _incrementPoints[_sortedNames[index]] += 1;
-                                  _scores[_sortedNames[index]] += 1;
-                                });
-                              },
-                              canBeNegative: false,
-                            ),
-                          ),
-                          Flexible(
-                            flex: 2,
-                            child: Center(
-                              child: Text(
-                                '${_scores[_sortedNames[index]]}',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              PointsInput(
+                                points: _decrementPoints[_sortedNames[index]],
+                                decrement: () {
+                                  setState(() {
+                                    _decrementPoints[_sortedNames[index]] -= 2;
+                                    _scores[_sortedNames[index]] -= 2;
+                                  });
+                                },
+                                increment: () {
+                                  setState(() {
+                                    _decrementPoints[_sortedNames[index]] += 2;
+                                    _scores[_sortedNames[index]] += 2;
+                                  });
+                                },
+                                canBePositive: false,
+                              ),
+                              PointsInput(
+                                points: _incrementPoints[_sortedNames[index]],
+                                decrement: () {
+                                  setState(() {
+                                    _incrementPoints[_sortedNames[index]] -= 1;
+                                    _scores[_sortedNames[index]] -= 1;
+                                  });
+                                },
+                                increment: () {
+                                  setState(() {
+                                    _incrementPoints[_sortedNames[index]] += 1;
+                                    _scores[_sortedNames[index]] += 1;
+                                  });
+                                },
+                                canBeNegative: false,
+                              ),
+                              Center(
+                                child: Container(
+                                  // So that the points row elements stay still when the size changes
+                                  width: 44,
+                                  child: Text(
+                                    '${_scores[_sortedNames[index]]}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 22,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
@@ -203,6 +200,7 @@ class _GameScreenState extends State<GameScreen> {
   Text _topText(String text) {
     return Text(
       text,
+      textAlign: TextAlign.center,
       style: TextStyle(color: Colors.grey[600]),
     );
   }
