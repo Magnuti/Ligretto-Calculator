@@ -13,7 +13,11 @@ class GameScreen extends StatefulWidget {
   _GameScreenState createState() => _GameScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
+  AnimationController _inController;
+  AnimationController _outController;
+  Animation<Offset> _inOffsetAnimation;
+  Animation<Offset> _outOffsetAnimation;
   Map<String, int> _scores = {};
   Map<String, int> _decrementPoints = {};
   Map<String, int> _incrementPoints = {};
@@ -23,6 +27,32 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
+    _inController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+
+    _outController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 250),
+    );
+
+    _inOffsetAnimation = Tween<Offset>(
+      begin: const Offset(0, 5.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _inController,
+      curve: Curves.easeOut,
+    ));
+
+    _outOffsetAnimation = Tween<Offset>(
+      begin: Offset.zero,
+      end: const Offset(0, -5.0),
+    ).animate(CurvedAnimation(
+      parent: _outController,
+      curve: Curves.easeIn,
+    ));
+
     _scores = Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
     _decrementPoints =
         Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
@@ -34,12 +64,30 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _inController.dispose();
+    _outController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _confirmQuit(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Runde $_round'),
+          title: Stack(
+            children: [
+              SlideTransition(
+                position: _inOffsetAnimation,
+                child: Text('Runde $_round'),
+              ),
+              SlideTransition(
+                position: _outOffsetAnimation,
+                child: Text('Runde $_round'),
+              ),
+            ],
+          ),
           centerTitle: true,
           leading: IconButton(
             onPressed: _confirmQuit,
@@ -145,7 +193,9 @@ class _GameScreenState extends State<GameScreen> {
               padding: EdgeInsets.symmetric(vertical: 8.0),
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
-                onPressed: () {
+                onPressed: () async {
+                  await Navigator.of(context).push(NextRoundOverlay());
+                  await _outController.forward();
                   setState(() {
                     for (String player in widget.players) {
                       _decrementPoints[player] = 0;
@@ -154,7 +204,9 @@ class _GameScreenState extends State<GameScreen> {
                     _sortedNames = _calculateSortedPlayers();
                     _round++;
                   });
-                  Navigator.of(context).push(NextRoundOverlay());
+                  await _inController.forward();
+                  _outController.reset();
+                  _inController.reset();
                 },
                 child: Text(
                   'Neste runde',
