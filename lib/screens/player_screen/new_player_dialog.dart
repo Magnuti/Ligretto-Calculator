@@ -40,10 +40,13 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
           textCapitalization: TextCapitalization.words,
           autofocus: true,
           decoration: InputDecoration(
-              border: UnderlineInputBorder(), hintText: 'Navn på spiller'),
+              border: UnderlineInputBorder(),
+              hintText: widget.firstTime
+                  ? 'Name of the first player'
+                  : 'Player name'),
           validator: (value) {
             if (value.isEmpty) {
-              return 'Vennligst fyll ut et navn';
+              return 'Please fill out a name';
             }
             return null;
           },
@@ -53,7 +56,7 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
         widget.firstTime
             ? Container()
             : FlatButton(
-                child: const Text('Avbryt'),
+                child: const Text('Cancel'),
                 onPressed: () => widget.cancel(),
               ),
         FlatButton(

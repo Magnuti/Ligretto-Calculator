@@ -44,7 +44,7 @@ class NextRoundOverlay extends ModalRoute<void> {
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Start neste Ligretto runde nå',
+              'Start the next Ligretto round now',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 30.0),
             ),

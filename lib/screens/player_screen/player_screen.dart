@@ -76,7 +76,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         child: RaisedButton.icon(
           onPressed: () => _showNewNameDialog(false),
           icon: Icon(Icons.add),
-          label: Text('Legg til spillere'),
+          label: Text('Add players'),
           color: darkBlue,
         ),
       ),

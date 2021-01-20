@@ -80,11 +80,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             children: [
               SlideTransition(
                 position: _inOffsetAnimation,
-                child: Text('Runde $_round'),
+                child: Text('Round $_round'),
               ),
               SlideTransition(
                 position: _outOffsetAnimation,
-                child: Text('Runde $_round'),
+                child: Text('Round $_round'),
               ),
             ],
           ),
@@ -107,9 +107,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _topText('Minuspoeng'),
-                  _topText('Plusspoeng'),
-                  _topText('Totalt'),
+                  _topText('Minus points'),
+                  _topText('Plus points'),
+                  _topText('Total'),
                 ],
               ),
             ),
@@ -209,7 +209,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                   _inController.reset();
                 },
                 child: Text(
-                  'Neste runde',
+                  'Next round',
                   style: TextStyle(fontSize: 16.0),
                 ),
               ),
@@ -224,15 +224,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     bool exit = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Advarsel'),
-            content: Text('Er du sikker på at du vil avslutte spillet?'),
+            title: Text('Warning'),
+            content: Text('Do you want to quit the game?'),
             actions: [
               TextButton(
-                child: Text('Nei'),
+                child: Text('No'),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               TextButton(
-                child: Text('Ja'),
+                child: Text('Yes'),
                 onPressed: () => Navigator.of(context).pop(true),
               ),
             ],

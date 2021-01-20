@@ -44,7 +44,7 @@ class PlayerField extends StatelessWidget {
                   Navigator.of(context).pop();
                   this.delete();
                 },
-                child: const Text('Fjern spiller'),
+                child: const Text('Remove player'),
               ),
             ],
           );
