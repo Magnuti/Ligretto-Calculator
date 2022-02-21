@@ -73,11 +73,11 @@ class _PlayerScreenState extends State<PlayerScreen> {
     elements.add(
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-        child: RaisedButton.icon(
+        child: ElevatedButton.icon(
           onPressed: () => _showNewNameDialog(false),
           icon: Icon(Icons.add),
           label: Text('Add players'),
-          color: darkBlue,
+          style: ElevatedButton.styleFrom(primary: darkBlue),
         ),
       ),
     );
@@ -88,16 +88,18 @@ class _PlayerScreenState extends State<PlayerScreen> {
     showDialog(
       context: context,
       barrierDismissible: !firstTime,
-      child: NewPlayerDialog(
-        firstTime: firstTime,
-        submit: (String value) {
-          setState(() {
-            _players.add(value);
-          });
-          Navigator.of(context).pop();
-        },
-        cancel: () => Navigator.of(context).pop(),
-      ),
+      builder: (context) {
+        return NewPlayerDialog(
+          firstTime: firstTime,
+          submit: (String value) {
+            setState(() {
+              _players.add(value);
+            });
+            Navigator.of(context).pop();
+          },
+          cancel: () => Navigator.of(context).pop(),
+        );
+      },
     );
   }
 }
