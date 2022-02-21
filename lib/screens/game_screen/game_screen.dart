@@ -224,8 +224,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     bool exit = await showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Warning'),
-            content: Text('Do you want to quit the game?'),
+            title: Text('Quit game?'),
+            content: Text('Are you sure you want to quit the game?'),
             actions: [
               TextButton(
                 child: Text('No'),
