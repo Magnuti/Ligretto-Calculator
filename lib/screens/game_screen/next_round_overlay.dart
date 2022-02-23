@@ -15,7 +15,7 @@ class NextRoundOverlay extends ModalRoute<void> {
   Color get barrierColor => Colors.black.withOpacity(0.5);
 
   @override
-  String get barrierLabel => null;
+  String get barrierLabel => 'Start the next Ligretto round now';
 
   @override
   bool get maintainState => false;
@@ -50,7 +50,7 @@ class NextRoundOverlay extends ModalRoute<void> {
             ),
           ),
           // ProgressCountdown(),
-          RaisedButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context),
             child: Text('OK'),
           ),

@@ -5,10 +5,10 @@ import 'package:holding_gesture/holding_gesture.dart';
 
 class PointsInput extends StatefulWidget {
   const PointsInput({
-    Key key,
-    @required this.points,
-    @required this.decrement,
-    @required this.increment,
+    Key? key,
+    required this.points,
+    required this.decrement,
+    required this.increment,
     this.canBeNegative = true,
     this.canBePositive = true,
   }) : super(key: key);

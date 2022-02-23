@@ -17,9 +17,10 @@ class MyApp extends StatelessWidget {
         appBarTheme: AppBarTheme(
           color: darkBlue,
         ),
-        buttonTheme: ButtonThemeData(
-          buttonColor: orange,
-          textTheme: ButtonTextTheme.primary,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(orange),
+          ),
         ),
       ),
       home: PlayerScreen(),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class PlayerField extends StatelessWidget {
   const PlayerField({
-    Key key,
-    this.playerName,
-    this.delete,
+    Key? key,
+    required this.playerName,
+    required this.delete,
   }) : super(key: key);
 
   final String playerName;

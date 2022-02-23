@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class NewPlayerDialog extends StatefulWidget {
   const NewPlayerDialog({
-    Key key,
-    @required this.firstTime,
-    @required this.submit,
-    @required this.cancel,
+    Key? key,
+    required this.firstTime,
+    required this.submit,
+    required this.cancel,
   }) : super(key: key);
 
   final bool firstTime;
@@ -18,7 +18,7 @@ class NewPlayerDialog extends StatefulWidget {
 
 class _NewPlayerDialogState extends State<NewPlayerDialog> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _controller;
+  late final TextEditingController _controller;
 
   void initState() {
     super.initState();
@@ -45,7 +45,7 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
                   ? 'Name of the first player'
                   : 'Player name'),
           validator: (value) {
-            if (value.isEmpty) {
+            if (value == null || value.isEmpty) {
               return 'Please fill out a name';
             }
             return null;
@@ -55,14 +55,14 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
       actions: [
         widget.firstTime
             ? Container()
-            : FlatButton(
+            : TextButton(
                 child: const Text('Cancel'),
                 onPressed: () => widget.cancel(),
               ),
-        FlatButton(
+        TextButton(
           child: const Text('OK'),
           onPressed: () {
-            if (_formKey.currentState.validate()) {
+            if (_formKey.currentState!.validate()) {
               widget.submit(_controller.text);
             }
           },

@@ -4,8 +4,8 @@ import 'package:ligretto_calculator/screens/game_screen/points_input.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({
-    Key key,
-    @required this.players,
+    Key? key,
+    required this.players,
   }) : super(key: key);
 
   final List<String> players;
@@ -14,10 +14,10 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
-  AnimationController _inController;
-  AnimationController _outController;
-  Animation<Offset> _inOffsetAnimation;
-  Animation<Offset> _outOffsetAnimation;
+  late final AnimationController _inController;
+  late final AnimationController _outController;
+  late final Animation<Offset> _inOffsetAnimation;
+  late final Animation<Offset> _outOffsetAnimation;
   Map<String, int> _scores = {};
   Map<String, int> _decrementPoints = {};
   Map<String, int> _incrementPoints = {};
@@ -73,7 +73,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => _confirmQuit(),
+      onWillPop: () => _confirmQuit().then((value) => value as bool),
       child: Scaffold(
         appBar: AppBar(
           title: Stack(
@@ -117,6 +117,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
               child: ListView.builder(
                 itemCount: _sortedNames.length,
                 itemBuilder: (context, index) {
+                  final String player = _sortedNames[index];
+                  final int playerScore = _scores[player]!;
+                  final int playerIncrementPoints = _incrementPoints[player]!;
+                  final int playerDecrementPoints = _decrementPoints[player]!;
+
                   return Card(
                     margin:
                         EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
@@ -127,7 +132,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 2.0),
                             child: Text(
-                              _sortedNames[index],
+                              player,
                               style: TextStyle(fontSize: 20.0),
                             ),
                           ),
@@ -135,33 +140,37 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               PointsInput(
-                                points: _decrementPoints[_sortedNames[index]],
+                                points: playerDecrementPoints,
                                 decrement: () {
                                   setState(() {
-                                    _decrementPoints[_sortedNames[index]] -= 2;
-                                    _scores[_sortedNames[index]] -= 2;
+                                    _decrementPoints[player] =
+                                        playerDecrementPoints - 2;
+                                    _scores[player] = playerScore - 2;
                                   });
                                 },
                                 increment: () {
                                   setState(() {
-                                    _decrementPoints[_sortedNames[index]] += 2;
-                                    _scores[_sortedNames[index]] += 2;
+                                    _decrementPoints[player] =
+                                        playerDecrementPoints + 2;
+                                    _scores[player] = playerScore + 2;
                                   });
                                 },
                                 canBePositive: false,
                               ),
                               PointsInput(
-                                points: _incrementPoints[_sortedNames[index]],
+                                points: playerIncrementPoints,
                                 decrement: () {
                                   setState(() {
-                                    _incrementPoints[_sortedNames[index]] -= 1;
-                                    _scores[_sortedNames[index]] -= 1;
+                                    _incrementPoints[player] =
+                                        playerIncrementPoints - 1;
+                                    _scores[player] = playerScore - 1;
                                   });
                                 },
                                 increment: () {
                                   setState(() {
-                                    _incrementPoints[_sortedNames[index]] += 1;
-                                    _scores[_sortedNames[index]] += 1;
+                                    _incrementPoints[player] =
+                                        playerIncrementPoints + 1;
+                                    _scores[player] = playerScore + 1;
                                   });
                                 },
                                 canBeNegative: false,
@@ -191,8 +200,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: RaisedButton(
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
+              child: ElevatedButton(
                 onPressed: () async {
                   await Navigator.of(context).push(NextRoundOverlay());
                   await _outController.forward();
@@ -211,6 +219,10 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                 child: Text(
                   'Next round',
                   style: TextStyle(fontSize: 16.0),
+                ),
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
                 ),
               ),
             ),
@@ -246,7 +258,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
 
   List<String> _calculateSortedPlayers() {
     return _scores.keys.toList()
-      ..sort((k1, k2) => _scores[k2].compareTo(_scores[k1]));
+      ..sort((k1, k2) => _scores[k2]!.compareTo(_scores[k1]!));
   }
 
   Text _topText(String text) {
