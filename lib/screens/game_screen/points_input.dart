@@ -6,18 +6,16 @@ import 'package:holding_gesture/holding_gesture.dart';
 class PointsInput extends StatefulWidget {
   const PointsInput({
     Key? key,
-    required this.points,
+    required this.cards,
     required this.decrement,
     required this.increment,
-    this.canBeNegative = true,
-    this.canBePositive = true,
+    required this.negativePoints,
   }) : super(key: key);
 
-  final int points;
+  final int cards;
   final VoidCallback decrement;
   final VoidCallback increment;
-  final bool canBeNegative;
-  final bool canBePositive;
+  final bool negativePoints;
 
   @override
   _PointsInputState createState() => _PointsInputState();
@@ -29,50 +27,56 @@ class _PointsInputState extends State<PointsInput> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    return Column(
       children: [
-        HoldDetector(
-          holdTimeout: _holdTickTime,
-          onHold: widget.canBeNegative || widget.points > 0
-              ? () {
-                  widget.decrement();
-                  HapticFeedback.lightImpact();
-                }
-              : () {}, // Cannot take in null
-          child: IconButton(
-            onPressed: widget.canBeNegative || widget.points > 0
-                ? () => widget.decrement()
-                : null,
-            icon: Icon(Icons.remove_circle),
-            iconSize: _iconSize,
-          ),
-        ),
         Container(
-          width: 36.0, // Works for 3 digits (e.g. -12)
-          child: Center(
-            child: Text(
-              widget.points.toString(),
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ),
-        HoldDetector(
-          holdTimeout: _holdTickTime,
-          onHold: widget.canBePositive || widget.points < 0
-              ? () {
+          height: 54.0,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              HoldDetector(
+                holdTimeout: _holdTickTime,
+                onHold: widget.cards > 0
+                    ? () {
+                        widget.decrement();
+                        HapticFeedback.lightImpact();
+                      }
+                    : () {}, // Cannot take in null
+                child: IconButton(
+                  onPressed: widget.cards > 0 ? () => widget.decrement() : null,
+                  icon: Icon(Icons.remove_circle),
+                  iconSize: _iconSize,
+                ),
+              ),
+              Container(
+                width: 70.0, // Works for 3 digits (e.g. -12)
+                child: Center(
+                  child: Text(
+                    widget.cards == 1
+                        ? '${widget.cards} card '
+                        : '${widget.cards} cards',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ),
+              HoldDetector(
+                holdTimeout: _holdTickTime,
+                onHold: () {
                   widget.increment();
                   HapticFeedback.lightImpact();
-                }
-              : () {}, // Cannot take in null
-          child: IconButton(
-            onPressed: widget.canBePositive || widget.points < 0
-                ? () => widget.increment()
-                : null,
-            icon: Icon(Icons.add_circle),
-            iconSize: _iconSize,
+                },
+                child: IconButton(
+                  onPressed: () => widget.increment(),
+                  icon: Icon(Icons.add_circle),
+                  iconSize: _iconSize,
+                ),
+              ),
+            ],
           ),
         ),
+        widget.negativePoints
+            ? Text('- ${widget.cards * 2} points')
+            : Text('+ ${widget.cards} points'),
       ],
     );
   }

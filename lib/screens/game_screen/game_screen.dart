@@ -14,49 +14,52 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
-  late final AnimationController _inController;
-  late final AnimationController _outController;
-  late final Animation<Offset> _inOffsetAnimation;
-  late final Animation<Offset> _outOffsetAnimation;
+  late final AnimationController _roundInController;
+  late final AnimationController _roundOutController;
+
+  late final Animation<Offset> _roundInOffsetAnimation;
+  late final Animation<Offset> _roundOutOffsetAnimation;
+
   Map<String, int> _scores = {};
-  Map<String, int> _decrementPoints = {};
-  Map<String, int> _incrementPoints = {};
+  Map<String, int> _cardsInLigretto = {};
+  Map<String, int> _cardsInCenter = {};
   List<String> _sortedNames = [];
   int _round = 1;
+  bool _isFillingInMinusPoints = true;
 
   @override
   void initState() {
     super.initState();
-    _inController = AnimationController(
+    _roundInController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
     );
 
-    _outController = AnimationController(
+    _roundOutController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),
     );
 
-    _inOffsetAnimation = Tween<Offset>(
+    _roundInOffsetAnimation = Tween<Offset>(
       begin: const Offset(0, 5.0),
       end: Offset.zero,
     ).animate(CurvedAnimation(
-      parent: _inController,
+      parent: _roundInController,
       curve: Curves.easeOut,
     ));
 
-    _outOffsetAnimation = Tween<Offset>(
+    _roundOutOffsetAnimation = Tween<Offset>(
       begin: Offset.zero,
       end: const Offset(0, -5.0),
     ).animate(CurvedAnimation(
-      parent: _outController,
-      curve: Curves.easeIn,
+      parent: _roundOutController,
+      curve: Curves.easeIn, // TODO check in vs. out
     ));
 
     _scores = Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
-    _decrementPoints =
+    _cardsInLigretto =
         Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
-    _incrementPoints =
+    _cardsInCenter =
         Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
     // _sortedNames = _calculateSortedPlayers();
     // No need to calculate any ranking now as all are 0
@@ -66,8 +69,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    _inController.dispose();
-    _outController.dispose();
+    _roundInController.dispose();
+    _roundOutController.dispose();
   }
 
   @override
@@ -79,11 +82,11 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           title: Stack(
             children: [
               SlideTransition(
-                position: _inOffsetAnimation,
+                position: _roundInOffsetAnimation,
                 child: Text('Round $_round'),
               ),
               SlideTransition(
-                position: _outOffsetAnimation,
+                position: _roundOutOffsetAnimation,
                 child: Text('Round $_round'),
               ),
             ],
@@ -103,14 +106,15 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         body: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 6.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _topText('Minus points'),
-                  _topText('Plus points'),
-                  _topText('Total'),
-                ],
+              padding: EdgeInsets.symmetric(vertical: 12.0),
+              child: Text(
+                // TODO add bold text to 'Ligretto' and 'center'
+                _isFillingInMinusPoints
+                    ? 'How many cards in the Ligretto'
+                    : 'How many cards in the center',
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
               ),
             ),
             Expanded(
@@ -119,8 +123,8 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   final String player = _sortedNames[index];
                   final int playerScore = _scores[player]!;
-                  final int playerIncrementPoints = _incrementPoints[player]!;
-                  final int playerDecrementPoints = _decrementPoints[player]!;
+                  final int playerCardsInCenter = _cardsInCenter[player]!;
+                  final int playerCardsInLigretto = _cardsInLigretto[player]!;
 
                   return Card(
                     margin:
@@ -137,56 +141,88 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              PointsInput(
-                                points: playerDecrementPoints,
-                                decrement: () {
-                                  setState(() {
-                                    _decrementPoints[player] =
-                                        playerDecrementPoints - 2;
-                                    _scores[player] = playerScore - 2;
-                                  });
-                                },
-                                increment: () {
-                                  setState(() {
-                                    _decrementPoints[player] =
-                                        playerDecrementPoints + 2;
-                                    _scores[player] = playerScore + 2;
-                                  });
-                                },
-                                canBePositive: false,
+                              // Cards in Ligretto points
+                              AnimatedDefaultTextStyle(
+                                child: Text(
+                                    '- ${_cardsInLigretto[player]! * 2} points'),
+                                style: TextStyle(
+                                    fontSize:
+                                        _isFillingInMinusPoints ? 0.0 : 18.0,
+                                    color: Colors.black),
+                                duration: Duration(milliseconds: 400),
                               ),
-                              PointsInput(
-                                points: playerIncrementPoints,
-                                decrement: () {
-                                  setState(() {
-                                    _incrementPoints[player] =
-                                        playerIncrementPoints - 1;
-                                    _scores[player] = playerScore - 1;
-                                  });
-                                },
-                                increment: () {
-                                  setState(() {
-                                    _incrementPoints[player] =
-                                        playerIncrementPoints + 1;
-                                    _scores[player] = playerScore + 1;
-                                  });
-                                },
-                                canBeNegative: false,
-                              ),
-                              Center(
-                                child: Container(
-                                  // So that the points row elements stay still when the size changes
-                                  width: 48,
-                                  child: Text(
-                                    '${_scores[_sortedNames[index]]}',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 22,
-                                    ),
+                              // Plus and minus point button
+                              Expanded(
+                                child: AnimatedAlign(
+                                  alignment: _isFillingInMinusPoints
+                                      ? Alignment.centerLeft
+                                      : Alignment.center,
+                                  duration: Duration(milliseconds: 400),
+                                  child: PointsInput(
+                                    cards: _isFillingInMinusPoints
+                                        ? playerCardsInLigretto
+                                        : playerCardsInCenter,
+                                    decrement: () {
+                                      if (_isFillingInMinusPoints) {
+                                        setState(() {
+                                          _cardsInLigretto[player] =
+                                              playerCardsInLigretto - 1;
+                                          _scores[player] = playerScore + 2;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _cardsInCenter[player] =
+                                              playerCardsInCenter - 1;
+                                          _scores[player] = playerScore - 1;
+                                        });
+                                      }
+                                    },
+                                    increment: () {
+                                      if (_isFillingInMinusPoints) {
+                                        setState(() {
+                                          _cardsInLigretto[player] =
+                                              playerCardsInLigretto + 1;
+                                          _scores[player] = playerScore - 2;
+                                        });
+                                      } else {
+                                        setState(() {
+                                          _cardsInCenter[player] =
+                                              playerCardsInCenter + 1;
+                                          _scores[player] = playerScore + 1;
+                                        });
+                                      }
+                                    },
+                                    negativePoints: _isFillingInMinusPoints,
                                   ),
+                                ),
+                              ),
+                              // Total points
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 54.0,
+                                      child: Center(
+                                        child: Text(
+                                          '${_scores[_sortedNames[index]]}',
+                                          // textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 22.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      'Total points',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -200,30 +236,61 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  await Navigator.of(context).push(NextRoundOverlay());
-                  await _outController.forward();
-                  setState(() {
-                    for (String player in widget.players) {
-                      _decrementPoints[player] = 0;
-                      _incrementPoints[player] = 0;
-                    }
-                    _sortedNames = _calculateSortedPlayers();
-                    _round++;
-                  });
-                  await _inController.forward();
-                  _outController.reset();
-                  _inController.reset();
-                },
-                child: Text(
-                  'Next round',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _isFillingInMinusPoints
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isFillingInMinusPoints = true;
+                              });
+                            },
+                            icon: Icon(Icons.arrow_back),
+                          ),
+                        ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_isFillingInMinusPoints) {
+                          setState(() {
+                            _isFillingInMinusPoints = false;
+                          });
+                        } else {
+                          await Navigator.of(context).push(NextRoundOverlay());
+                          await _roundOutController.forward();
+                          setState(() {
+                            for (String player in widget.players) {
+                              _cardsInLigretto[player] = 0;
+                              _cardsInCenter[player] = 0;
+                            }
+                            _sortedNames = _calculateSortedPlayers();
+                            _round++;
+                            _isFillingInMinusPoints = true;
+                          });
+                          await _roundInController.forward();
+                          _roundOutController.reset();
+                          _roundInController.reset();
+                        }
+                      },
+                      child: Text(
+                        // TODO change button, maybe a FloatingActionButton
+                        _isFillingInMinusPoints ? 'Continue' : 'Next round',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 24.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -259,13 +326,5 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   List<String> _calculateSortedPlayers() {
     return _scores.keys.toList()
       ..sort((k1, k2) => _scores[k2]!.compareTo(_scores[k1]!));
-  }
-
-  Text _topText(String text) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(color: Colors.grey[600]),
-    );
   }
 }
