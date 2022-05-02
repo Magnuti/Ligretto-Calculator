@@ -95,7 +95,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       barrierDismissible: !firstTime,
       builder: (context) {
         return NewPlayerDialog(
-          firstTime: firstTime,
+          playersSoFar: _players,
           submit: (String value) {
             setState(() {
               _players.add(value);
