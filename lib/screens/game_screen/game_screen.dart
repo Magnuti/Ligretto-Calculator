@@ -118,14 +118,20 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(vertical: 12.0),
-              child: Text(
-                // TODO add bold text to 'Ligretto' and 'center'
-                _isFillingInMinusPoints
-                    ? 'How many cards in the Ligretto'
-                    : 'How many cards in the center',
-                style: TextStyle(
-                  fontSize: 20.0,
-                ),
+              child: RichText(
+                text: TextSpan(
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1?.color,
+                      fontSize: 18.0,
+                    ),
+                    // ),
+                    children: [
+                      TextSpan(text: 'How many cards in the '),
+                      TextSpan(
+                        text: _isFillingInMinusPoints ? 'Ligretto?' : 'center?',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ]),
               ),
             ),
             Expanded(
