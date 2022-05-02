@@ -55,7 +55,7 @@ class _PointsInputState extends State<PointsInput> {
                     widget.cards == 1
                         ? '${widget.cards} card '
                         : '${widget.cards} cards',
-                    style: TextStyle(fontSize: 18),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ),
               ),

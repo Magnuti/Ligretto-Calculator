@@ -26,7 +26,7 @@ class PlayerField extends StatelessWidget {
               EdgeInsets.only(top: 8.0, bottom: 8.0, right: 8.0, left: 12.0),
           child: Text(
             playerName,
-            style: TextStyle(fontSize: 22.0),
+            style: TextStyle(fontSize: 20.0),
           ),
         ),
       ),

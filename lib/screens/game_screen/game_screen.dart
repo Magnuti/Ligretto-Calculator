@@ -124,7 +124,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                     ? 'How many cards in the Ligretto'
                     : 'How many cards in the center',
                 style: TextStyle(
-                  fontSize: 22.0,
+                  fontSize: 20.0,
                 ),
               ),
             ),
@@ -148,7 +148,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             padding: EdgeInsets.symmetric(vertical: 2.0),
                             child: Text(
                               player,
-                              style: TextStyle(fontSize: 20.0),
+                              style: TextStyle(fontSize: 18.0),
                             ),
                           ),
                           Row(
@@ -159,7 +159,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                     '- ${_cardsInLigretto[player]! * 2} points'),
                                 style: TextStyle(
                                     fontSize:
-                                        _isFillingInMinusPoints ? 0.0 : 18.0,
+                                        _isFillingInMinusPoints ? 0.0 : 16.0,
                                     color: Colors.black),
                                 duration: Duration(milliseconds: 400),
                               ),
@@ -222,7 +222,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                           // textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 22.0,
+                                            fontSize: 16.0,
                                           ),
                                         ),
                                       ),

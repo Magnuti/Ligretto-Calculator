@@ -70,16 +70,15 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                 )
                               : Container(),
                         ),
-                        Text(
-                          player,
-                          style: TextStyle(fontSize: 24.0),
-                        ),
-                        Spacer(
-                          flex: 6,
+                        Expanded(
+                          child: Text(
+                            player,
+                            style: TextStyle(fontSize: 20.0),
+                          ),
                         ),
                         Text(
                           playerScore.toString(),
-                          style: TextStyle(fontSize: 24.0),
+                          style: TextStyle(fontSize: 20.0),
                         ),
                       ],
                     ),
