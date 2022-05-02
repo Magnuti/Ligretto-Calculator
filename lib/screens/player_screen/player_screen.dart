@@ -44,6 +44,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       MaterialPageRoute(
                         builder: (context) => GameScreen(
                           players: _players,
+                          scores: Map.fromIterable(_players,
+                              key: (e) => e, value: (e) => 0),
+                          round: 1,
                         ),
                       ),
                     );

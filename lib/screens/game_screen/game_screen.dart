@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:ligretto_calculator/screens/game_screen/next_round_overlay.dart';
 import 'package:ligretto_calculator/screens/game_screen/points_input.dart';
+import 'package:ligretto_calculator/screens/game_screen/scoreboard_screen.dart';
+import 'package:ligretto_calculator/screens/game_screen/utils.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({
     Key? key,
     required this.players,
+    required this.scores,
+    required this.round,
   }) : super(key: key);
 
   final List<String> players;
+  final Map<String, int> scores;
+  final int round;
+
   @override
   _GameScreenState createState() => _GameScreenState();
 }
@@ -23,8 +29,6 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   Map<String, int> _scores = {};
   Map<String, int> _cardsInLigretto = {};
   Map<String, int> _cardsInCenter = {};
-  List<String> _sortedNames = [];
-  int _round = 1;
   bool _isFillingInMinusPoints = true;
 
   @override
@@ -56,14 +60,12 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
       curve: Curves.easeIn, // TODO check in vs. out
     ));
 
-    _scores = Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
+    _scores = Map.fromIterable(widget.players,
+        key: (e) => e, value: (e) => widget.scores[e]!);
     _cardsInLigretto =
         Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
     _cardsInCenter =
         Map.fromIterable(widget.players, key: (e) => e, value: (e) => 0);
-    // _sortedNames = _calculateSortedPlayers();
-    // No need to calculate any ranking now as all are 0
-    _sortedNames = _scores.keys.toList();
   }
 
   @override
@@ -76,24 +78,33 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => _confirmQuit().then((value) => value as bool),
+      onWillPop: () async {
+        if (!_isFillingInMinusPoints) {
+          setState(() {
+            _isFillingInMinusPoints = true;
+          });
+          return false;
+        } else {
+          return confirmQuit(context);
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Stack(
             children: [
               SlideTransition(
                 position: _roundInOffsetAnimation,
-                child: Text('Round $_round'),
+                child: Text('Round ${widget.round}'),
               ),
               SlideTransition(
                 position: _roundOutOffsetAnimation,
-                child: Text('Round $_round'),
+                child: Text('Round ${widget.round}'),
               ),
             ],
           ),
           centerTitle: true,
           leading: IconButton(
-            onPressed: _confirmQuit,
+            onPressed: () => confirmQuitAndQuit(context),
             icon: Icon(Icons.close),
           ),
           // actions: [
@@ -119,9 +130,9 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: _sortedNames.length,
-                itemBuilder: (context, index) {
-                  final String player = _sortedNames[index];
+                itemCount: widget.players.length,
+                itemBuilder: (_, index) {
+                  final String player = widget.players[index];
                   final int playerScore = _scores[player]!;
                   final int playerCardsInCenter = _cardsInCenter[player]!;
                   final int playerCardsInLigretto = _cardsInLigretto[player]!;
@@ -207,7 +218,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                       height: 54.0,
                                       child: Center(
                                         child: Text(
-                                          '${_scores[_sortedNames[index]]}',
+                                          '$playerScore',
                                           // textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
@@ -261,20 +272,16 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                             _isFillingInMinusPoints = false;
                           });
                         } else {
-                          await Navigator.of(context).push(NextRoundOverlay());
-                          await _roundOutController.forward();
-                          setState(() {
-                            for (String player in widget.players) {
-                              _cardsInLigretto[player] = 0;
-                              _cardsInCenter[player] = 0;
-                            }
-                            _sortedNames = _calculateSortedPlayers();
-                            _round++;
-                            _isFillingInMinusPoints = true;
-                          });
-                          await _roundInController.forward();
-                          _roundOutController.reset();
-                          _roundInController.reset();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ScoreboardScreen(
+                                players: widget.players,
+                                scores: _scores,
+                                round: widget.round,
+                              ),
+                            ),
+                          );
                         }
                       },
                       child: Text(
@@ -297,34 +304,5 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-
-  Future<void> _confirmQuit() async {
-    bool exit = await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Quit game?'),
-            content: Text('Are you sure you want to quit the game?'),
-            actions: [
-              TextButton(
-                child: Text('No'),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-              TextButton(
-                child: Text('Yes'),
-                onPressed: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-    if (exit) {
-      Navigator.pop(context);
-    }
-  }
-
-  List<String> _calculateSortedPlayers() {
-    return _scores.keys.toList()
-      ..sort((k1, k2) => _scores[k2]!.compareTo(_scores[k1]!));
   }
 }
