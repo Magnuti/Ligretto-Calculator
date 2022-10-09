@@ -19,14 +19,17 @@ class NewPlayerDialog extends StatefulWidget {
 class _NewPlayerDialogState extends State<NewPlayerDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _controller;
+  late FocusNode _textFieldFocusNode;
 
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    _textFieldFocusNode = FocusNode();
   }
 
   void dispose() {
     _controller.dispose();
+    _textFieldFocusNode.dispose();
     super.dispose();
   }
 
@@ -37,14 +40,16 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
         key: _formKey,
         child: TextFormField(
           controller: _controller,
+          focusNode: _textFieldFocusNode,
           textCapitalization: TextCapitalization.words,
           autofocus: true,
           decoration: InputDecoration(
             border: UnderlineInputBorder(),
             hintText: _hintText(widget.playersSoFar.length + 1),
           ),
+          onFieldSubmitted: (_) => _submit(),
           validator: (value) {
-            if (value == null || value.isEmpty) {
+            if (value == null || value.trim().isEmpty) {
               return 'Please fill out a name';
             } else if (widget.playersSoFar.contains(value.trim())) {
               return '${value.trim()} is already in the game';
@@ -62,14 +67,20 @@ class _NewPlayerDialogState extends State<NewPlayerDialog> {
               ),
         TextButton(
           child: const Text('OK'),
-          onPressed: () {
-            if (_formKey.currentState!.validate()) {
-              widget.submit(_controller.text.trim());
-            }
-          },
+          onPressed: _submit,
         )
       ],
     );
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      widget.submit(_controller.text.trim());
+    } else {
+      // When the Enter key is pressed the text field loses focus, so we
+      // manually set the focus back if the text is not submitted.
+      _textFieldFocusNode.requestFocus();
+    }
   }
 
   String _hintText(int playerNumber) {
