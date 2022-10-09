@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ligretto_calculator/res/colors.dart';
 import 'package:ligretto_calculator/res/custom_icons.dart';
 import 'package:ligretto_calculator/screens/game_screen/game_screen.dart';
 import 'package:ligretto_calculator/screens/game_screen/utils.dart';
@@ -38,85 +39,103 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         appBar: AppBar(
           title: Text('Finished round ${widget.round}'),
           centerTitle: true,
-          leading: IconButton(
-            onPressed: () => confirmQuitAndQuit(context),
-            icon: Icon(Icons.close),
-          ),
+          automaticallyImplyLeading: false,
         ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                itemCount: _sortedNames.length,
-                itemBuilder: (context, index) {
-                  final String player = _sortedNames[index];
-                  final int playerScore = widget.scores[player]!;
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                      top: 16.0,
-                      bottom: 16.0,
-                      left: 8.0,
-                      right: 24.0,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 48,
-                          child: index == 0
-                              ? Padding(
-                                  padding: const EdgeInsets.only(top: 6.0),
-                                  child: Icon(CustomIcons.crown),
-                                )
-                              : Container(),
-                        ),
-                        Expanded(
-                          child: Text(
-                            player,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: ListView.separated(
+                  itemCount: _sortedNames.length,
+                  itemBuilder: (context, index) {
+                    final String player = _sortedNames[index];
+                    final int playerScore = widget.scores[player]!;
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16.0,
+                        bottom: 16.0,
+                        left: 8.0,
+                        right: 24.0,
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 48,
+                            child: index == 0
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 6.0),
+                                    child: Icon(CustomIcons.crown),
+                                  )
+                                : Container(),
+                          ),
+                          Expanded(
+                            child: Text(
+                              player,
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                          ),
+                          Text(
+                            playerScore.toString(),
                             style: TextStyle(fontSize: 20.0),
                           ),
-                        ),
-                        Text(
-                          playerScore.toString(),
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-                separatorBuilder: (_, __) => Divider(
-                  thickness: 1.0,
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (_, __) => Divider(
+                    thickness: 1.0,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: ElevatedButton(
-                onPressed: () => {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => GameScreen(
-                        players: widget.players,
-                        scores: widget.scores,
-                        round: widget.round + 1,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => confirmQuitAndQuit(context),
+                      child: Text(
+                        'Finish game',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 24.0,
+                        ),
+                        backgroundColor: darkBlue,
                       ),
                     ),
-                  ),
-                },
-                child: Text(
-                  'Next round',
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 10.0,
-                    horizontal: 24.0,
-                  ),
+                    ElevatedButton(
+                      onPressed: () => {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GameScreen(
+                              players: widget.players,
+                              scores: widget.scores,
+                              round: widget.round + 1,
+                            ),
+                          ),
+                        ),
+                      },
+                      child: Text(
+                        'Next round',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.0,
+                          horizontal: 24.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -32,11 +32,13 @@ class _PlayerScreenState extends State<PlayerScreen> {
             children: <Widget>[
               Expanded(child: _listBody()),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 24.0,
+                    ),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -53,7 +55,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   },
                   child: Text(
                     "Start",
-                    style: TextStyle(fontSize: 20.0),
+                    style: TextStyle(fontSize: 16.0),
                   ),
                 ),
               ),
@@ -82,7 +84,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           onPressed: () => _showNewNameDialog(false),
           icon: Icon(Icons.add),
           label: Text('Add players'),
-          style: ElevatedButton.styleFrom(primary: darkBlue),
+          style: ElevatedButton.styleFrom(backgroundColor: darkBlue),
         ),
       ),
     );

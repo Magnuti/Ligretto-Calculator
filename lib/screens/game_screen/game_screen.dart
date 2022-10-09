@@ -114,199 +114,203 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
           //   ),
           // ],
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.0),
-              child: RichText(
-                text: TextSpan(
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyText1?.color,
-                      fontSize: 18.0,
-                    ),
-                    // ),
-                    children: [
-                      TextSpan(text: 'How many cards in the '),
-                      TextSpan(
-                        text: _isFillingInMinusPoints ? 'Ligretto?' : 'center?',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.0),
+                child: RichText(
+                  text: TextSpan(
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText1?.color,
+                        fontSize: 18.0,
                       ),
-                    ]),
+                      // ),
+                      children: [
+                        TextSpan(text: 'How many cards in the '),
+                        TextSpan(
+                          text:
+                              _isFillingInMinusPoints ? 'Ligretto?' : 'center?',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ]),
+                ),
               ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.players.length,
-                itemBuilder: (_, index) {
-                  final String player = widget.players[index];
-                  final int playerScore = _scores[player]!;
-                  final int playerCardsInCenter = _cardsInCenter[player]!;
-                  final int playerCardsInLigretto = _cardsInLigretto[player]!;
+              Expanded(
+                child: ListView.builder(
+                  itemCount: widget.players.length,
+                  itemBuilder: (_, index) {
+                    final String player = widget.players[index];
+                    final int playerScore = _scores[player]!;
+                    final int playerCardsInCenter = _cardsInCenter[player]!;
+                    final int playerCardsInLigretto = _cardsInLigretto[player]!;
 
-                  return Card(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
-                    child: Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2.0),
-                            child: Text(
-                              player,
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              // Cards in Ligretto points
-                              AnimatedDefaultTextStyle(
-                                child: Text(
-                                    '- ${_cardsInLigretto[player]! * 2} points'),
-                                style: TextStyle(
-                                    fontSize:
-                                        _isFillingInMinusPoints ? 0.0 : 16.0,
-                                    color: Colors.black),
-                                duration: Duration(milliseconds: 400),
+                    return Card(
+                      margin:
+                          EdgeInsets.symmetric(vertical: 6.0, horizontal: 4.0),
+                      child: Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 2.0),
+                              child: Text(
+                                player,
+                                style: TextStyle(fontSize: 18.0),
                               ),
-                              // Plus and minus point button
-                              Expanded(
-                                child: AnimatedAlign(
-                                  alignment: _isFillingInMinusPoints
-                                      ? Alignment.centerLeft
-                                      : Alignment.center,
+                            ),
+                            Row(
+                              children: [
+                                // Cards in Ligretto points
+                                AnimatedDefaultTextStyle(
+                                  child: Text(
+                                      '- ${_cardsInLigretto[player]! * 2} points'),
+                                  style: TextStyle(
+                                      fontSize:
+                                          _isFillingInMinusPoints ? 0.0 : 16.0,
+                                      color: Colors.black),
                                   duration: Duration(milliseconds: 400),
-                                  child: PointsInput(
-                                    cards: _isFillingInMinusPoints
-                                        ? playerCardsInLigretto
-                                        : playerCardsInCenter,
-                                    decrement: () {
-                                      if (_isFillingInMinusPoints) {
-                                        setState(() {
-                                          _cardsInLigretto[player] =
-                                              playerCardsInLigretto - 1;
-                                          _scores[player] = playerScore + 2;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _cardsInCenter[player] =
-                                              playerCardsInCenter - 1;
-                                          _scores[player] = playerScore - 1;
-                                        });
-                                      }
-                                    },
-                                    increment: () {
-                                      if (_isFillingInMinusPoints) {
-                                        setState(() {
-                                          _cardsInLigretto[player] =
-                                              playerCardsInLigretto + 1;
-                                          _scores[player] = playerScore - 2;
-                                        });
-                                      } else {
-                                        setState(() {
-                                          _cardsInCenter[player] =
-                                              playerCardsInCenter + 1;
-                                          _scores[player] = playerScore + 1;
-                                        });
-                                      }
-                                    },
-                                    negativePoints: _isFillingInMinusPoints,
+                                ),
+                                // Plus and minus point button
+                                Expanded(
+                                  child: AnimatedAlign(
+                                    alignment: _isFillingInMinusPoints
+                                        ? Alignment.centerLeft
+                                        : Alignment.center,
+                                    duration: Duration(milliseconds: 400),
+                                    child: PointsInput(
+                                      cards: _isFillingInMinusPoints
+                                          ? playerCardsInLigretto
+                                          : playerCardsInCenter,
+                                      decrement: () {
+                                        if (_isFillingInMinusPoints) {
+                                          setState(() {
+                                            _cardsInLigretto[player] =
+                                                playerCardsInLigretto - 1;
+                                            _scores[player] = playerScore + 2;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _cardsInCenter[player] =
+                                                playerCardsInCenter - 1;
+                                            _scores[player] = playerScore - 1;
+                                          });
+                                        }
+                                      },
+                                      increment: () {
+                                        if (_isFillingInMinusPoints) {
+                                          setState(() {
+                                            _cardsInLigretto[player] =
+                                                playerCardsInLigretto + 1;
+                                            _scores[player] = playerScore - 2;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            _cardsInCenter[player] =
+                                                playerCardsInCenter + 1;
+                                            _scores[player] = playerScore + 1;
+                                          });
+                                        }
+                                      },
+                                      negativePoints: _isFillingInMinusPoints,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              // Total points
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 54.0,
-                                      child: Center(
-                                        child: Text(
-                                          '$playerScore',
-                                          // textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16.0,
+                                // Total points
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 54.0,
+                                        child: Center(
+                                          child: Text(
+                                            '$playerScore',
+                                            // textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16.0,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    Text(
-                                      'Total points',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
+                                      Text(
+                                        'Total points',
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _isFillingInMinusPoints
+                        ? Container()
+                        : Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isFillingInMinusPoints = true;
+                                });
+                              },
+                              icon: Icon(Icons.arrow_back),
+                            ),
+                          ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_isFillingInMinusPoints) {
+                            setState(() {
+                              _isFillingInMinusPoints = false;
+                            });
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ScoreboardScreen(
+                                  players: widget.players,
+                                  scores: _scores,
+                                  round: widget.round,
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _isFillingInMinusPoints
-                      ? Container()
-                      : Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                _isFillingInMinusPoints = true;
-                              });
-                            },
-                            icon: Icon(Icons.arrow_back),
-                          ),
+                            );
+                          }
+                        },
+                        child: Text(
+                          // TODO change button, maybe a FloatingActionButton
+                          _isFillingInMinusPoints ? 'Continue' : 'Next round',
+                          style: TextStyle(fontSize: 16.0),
                         ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (_isFillingInMinusPoints) {
-                          setState(() {
-                            _isFillingInMinusPoints = false;
-                          });
-                        } else {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ScoreboardScreen(
-                                players: widget.players,
-                                scores: _scores,
-                                round: widget.round,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: Text(
-                        // TODO change button, maybe a FloatingActionButton
-                        _isFillingInMinusPoints ? 'Continue' : 'Next round',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 24.0,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 24.0,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
