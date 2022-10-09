@@ -22,6 +22,8 @@ class ScoreboardScreen extends StatefulWidget {
 
 class _ScoreboardScreenState extends State<ScoreboardScreen> {
   late List<String> _sortedNames;
+  late int _bestScore;
+
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     // Sort the players in descending order
     _sortedNames = widget.scores.keys.toList()
       ..sort((k1, k2) => widget.scores[k2]!.compareTo(widget.scores[k1]!));
+    _bestScore = widget.scores[_sortedNames[0]]!;
   }
 
   @override
@@ -62,7 +65,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                         children: [
                           Container(
                             width: 48,
-                            child: index == 0
+                            child: playerScore == _bestScore
                                 ? Padding(
                                     padding: const EdgeInsets.only(top: 6.0),
                                     child: Icon(CustomIcons.crown),
