@@ -164,7 +164,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
                                 // Cards in Ligretto points
                                 AnimatedDefaultTextStyle(
                                   child: Text(
-                                      '- ${_cardsInLigretto[player]! * 2} points'),
+                                      ' - ${_cardsInLigretto[player]! * 2} points'),
                                   style: TextStyle(
                                       fontSize:
                                           _isFillingInMinusPoints ? 0.0 : 16.0,

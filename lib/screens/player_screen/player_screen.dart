@@ -15,7 +15,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // _showNew..() must be called inside WidgetBi..() funtion as it must finish building.
       // Maybe because Scaffold is not build yet?
       _showNewNameDialog(true);
