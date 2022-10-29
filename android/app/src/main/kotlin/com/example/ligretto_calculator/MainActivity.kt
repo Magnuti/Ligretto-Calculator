@@ -1,4 +1,4 @@
-package com.example.ligretto_calculator
+package com.Ramriez.ligretto_calculator
 
 import io.flutter.embedding.android.FlutterActivity
 
